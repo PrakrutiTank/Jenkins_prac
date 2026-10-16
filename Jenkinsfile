@@ -2,11 +2,18 @@ pipeline {
     agent {
         node {
             label 'local'
-            customWorkspace 'C:\\Users\\hp\\OneDrive\\Desktop\\SEM 7\\mlops\\Jenkins_prac'
         }
     }
 
     stages {
+
+        
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/PrakrutiTank/Jenkins_prac.git'
+            }
+        }
 
         stage('Show Workspace') {
             steps {

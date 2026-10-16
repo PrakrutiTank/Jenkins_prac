@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Predictions - Iris MLOps</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a0ca3;
+            --bg-color: #f8f9fc;
+            --card-bg: #ffffff;
+            --text-dark: #2b2d42;
+            --text-muted: #6c757d;
+            --border-radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --danger: #e63946;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 35px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            color: #1a1a2e;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f4f9;
+            color: #4a4e69;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 12px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .species-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: capitalize;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .species-setosa {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .species-versicolor {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .species-virginica {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .alert-error {
+            background: #ffe3e3;
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div>
+                    <h1>Database Prediction Records</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Historical logs persisted in dbapp service</p>
+                </div>
+                <a href="/" class="btn btn-primary">&larr; Back to Predictor</a>
+            </div>
+
+            {% if error_message %}
+            <div class="alert-error">
+                <strong>Service Notice:</strong> {{ error_message }}
+            </div>
+            {% endif %}
+
+            {% if records and records|length > 0 %}
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sepal Length</th>
+                            <th>Sepal Width</th>
+                            <th>Petal Length</th>
+                            <th>Petal Width</th>
+                            <th>Predicted Species</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in records %}
+                        <tr>
+                            <td>#{{ r.id }}</td>
+                            <td>{{ r.sepal_length }} cm</td>
+                            <td>{{ r.sepal_width }} cm</td>
+                            <td>{{ r.petal_length }} cm</td>
+                            <td>{{ r.petal_width }} cm</td>
+                            <td>
+                                <span class="species-badge species-{{ r.prediction|lower }}">
+                                    {{ r.prediction }}
+                                </span>
+                            </td>
+                            <td style="color: var(--text-muted); font-size: 0.85rem;">{{ r.timestamp }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>No records found in database.</p>
+                <a href="/" class="btn btn-primary">Make First Prediction</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

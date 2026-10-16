@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  dbapp:
+    build: ./dbapp
+    image: iris-dbapp:latest
+    container_name: iris-db-service
+    ports:
+      - "5002:5002"
+    volumes:
+      - db_data:/app/data
+    environment:
+      - DB_PATH=/app/data/predictions.db
+      - PORT=5002
+    restart: unless-stopped
+
+  webapp:
+    build: ./webapp
+    image: iris-webapp:latest
+    container_name: iris-web-service
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_SERVICE_URL=http://dbapp:5002
+      - PORT=5000
+    depends_on:
+      - dbapp
+    restart: unless-stopped
+
+volumes:
+  db_data:

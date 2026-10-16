@@ -1,0 +1,24 @@
+[project]
+name = "jenkins-prac"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "PrakrutiTank", email = "prakrutitank@gmail.com" }
+]
+requires-python = ">=3.13.5"
+dependencies = [
+    "flask>=3.1.3",
+    "flask-sqlalchemy>=3.1.1",
+    "numpy>=2.5.4",
+    "pytest>=9.1.1",
+    "requests>=2.34.2",
+    "scikit-learn>=1.9.1",
+]
+
+[project.scripts]
+jenkins-prac = "jenkins_prac:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
